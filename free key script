@@ -1,0 +1,77 @@
+-- Perfect Fake Kick Screen - LocalScript only
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+-- ✅ Blur background
+local blur = Instance.new("BlurEffect")
+blur.Size = 24
+blur.Parent = Lighting
+
+-- ✅ Create GUI
+local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
+screenGui.Name = "FakeKickUI"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+
+-- Background Frame
+local bg = Instance.new("Frame", screenGui)
+bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+bg.Size = UDim2.new(1, 0, 1, 0)
+bg.BackgroundTransparency = 1
+
+TweenService:Create(bg, TweenInfo.new(0.7), {BackgroundTransparency = 0.5}):Play()
+
+-- Kick Box
+local box = Instance.new("Frame", bg)
+box.AnchorPoint = Vector2.new(0.5, 0.5)
+box.Position = UDim2.new(0.5, 0, 0.5, 0)
+box.Size = UDim2.new(0, 400, 0, 180)
+box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+box.BorderSizePixel = 0
+box.BackgroundTransparency = 0
+box.ClipsDescendants = true
+
+-- Title
+local title = Instance.new("TextLabel", box)
+title.Size = UDim2.new(1, 0, 0.2, 0)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Text = "Disconnected"
+title.Font = Enum.Font.SourceSansBold
+title.TextScaled = true
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+
+-- Divider line
+local line = Instance.new("Frame", box)
+line.Size = UDim2.new(1, -20, 0, 1)
+line.Position = UDim2.new(0, 10, 0.22, 0)
+line.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+
+-- Message
+local message = Instance.new("TextLabel", box)
+message.Size = UDim2.new(1, -40, 0.45, 0)
+message.Position = UDim2.new(0, 20, 0.3, 0)
+message.Text = "You were kicked from this experience: You are\nBanned from the Game.\n(Error Code: 267)"
+message.Font = Enum.Font.SourceSans
+message.TextColor3 = Color3.fromRGB(230, 230, 230)
+message.TextScaled = true
+message.TextWrapped = true
+message.BackgroundTransparency = 1
+
+-- Leave Button
+local button = Instance.new("TextButton", box)
+button.Size = UDim2.new(0, 150, 0, 40)
+button.Position = UDim2.new(0.5, -75, 0.8, 0)
+button.Text = "Leave"
+button.Font = Enum.Font.SourceSansBold
+button.TextColor3 = Color3.fromRGB(0, 0, 0)
+button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+button.TextScaled = true
+button.AutoButtonColor = false
+
+button.MouseButton1Click:Connect(function()
+	game:Shutdown()
+end)
