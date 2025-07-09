@@ -22,10 +22,11 @@ flashFrame.Parent = screenGui
 
 -- Âm thanh Jumpscare
 local screamSound = Instance.new("Sound")
-screamSound.SoundId = "rbxassetid://138186576" -- You can replace with louder scream if needed
+screamSound.SoundId = "rbxassetid://138186576"
 screamSound.Volume = 10
 screamSound.Name = "ScreamSound"
 screamSound.Parent = workspace
+screamSound:Play() -- 🔥 Phát âm thanh ngay lập tức
 
 -- Hàm nhấp nháy màn hình trong 10s
 local function flashingEffect()
@@ -77,17 +78,16 @@ local function showFakeBanUI()
 	msg.Parent = banFrame
 end
 
--- Kết thúc: kick khỏi game sau 5 giây
+-- Kick sau 5s
 local function kickPlayer()
 	task.wait(5)
-	player:Kick("You have been kicked by this experience or its moderators.\n\nModeration message:\n\n" ..
+	player:Kick("we suspect you use script,this is warning if you use client one more time you get premium banned.\n\nModeration message:\n\n" ..
 		"You have been permanently banned for Duping/Owning an illegal duplicate of\n" ..
 		"3.91 tons Tomato Bush in Grow A Garden\nuuid: [c2ff0abc-90fa-4d99-9323-fakebanned-2025]\n(Error Code: 267)")
 end
 
 -- Chạy hiệu ứng
-task.wait(2)
-screamSound:Play()
+task.wait(0.5) -- Cho âm thanh phát trước một chút rồi mới chạy hiệu ứng
 flashingEffect()
 showFakeBanUI()
 kickPlayer()
