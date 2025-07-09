@@ -1,115 +1,85 @@
--- Fake Ban + Jump Scare Script
--- For trolling purposes only 😈
-
 local Players = game:GetService("Players")
-local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
-local StarterGui = game:GetService("StarterGui")
-local LocalPlayer = Players.LocalPlayer
+local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
 
--- ⚠️ Add blur
-local blur = Instance.new("BlurEffect")
-blur.Size = 24
-blur.Parent = Lighting
+local player = Players.LocalPlayer
 
--- 👻 Jump Scare function
-local function jumpScare()
-	local screamSound = Instance.new("Sound", workspace)
-	screamSound.SoundId = "rbxassetid://138186576" -- Scream Sound (scary!)
-	screamSound.Volume = 10
-	screamSound:Play()
-
-	local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
-	gui.Name = "JumpScare"
-
-	local scaryImage = Instance.new("ImageLabel", gui)
-	scaryImage.Size = UDim2.new(1, 0, 1, 0)
-	scaryImage.Position = UDim2.new(0, 0, 0, 0)
-	scaryImage.BackgroundTransparency = 1
-	scaryImage.Image = "rbxassetid://11388974463" -- Scary face image
-	scaryImage.ImageTransparency = 1
-
-	TweenService:Create(scaryImage, TweenInfo.new(0.3), {ImageTransparency = 0}):Play()
-
-	task.delay(2, function()
-		game:Shutdown()
-	end)
-end
-
--- Perfect Fake Kick Screen - LocalScript only
-
-local Players = game:GetService("Players")
-local Lighting = game:GetService("Lighting")
-local TweenService = game:GetService("TweenService")
-local LocalPlayer = Players.LocalPlayer
-
--- ✅ Blur background
-local blur = Instance.new("BlurEffect")
-blur.Size = 24
-blur.Parent = Lighting
-
--- ✅ Create GUI
-local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
-screenGui.Name = "FakeKickUI"
+-- UI Flash Màn hình đen trắng nhấp nháy
+local screenGui = Instance.new("ScreenGui", game.CoreGui)
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 
--- Background Frame
-local bg = Instance.new("Frame", screenGui)
-bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-bg.Size = UDim2.new(1, 0, 1, 0)
-bg.BackgroundTransparency = 1
+local flashFrame = Instance.new("Frame", screenGui)
+flashFrame.Size = UDim2.new(1, 0, 1, 0)
+flashFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+flashFrame.BackgroundTransparency = 1
 
-TweenService:Create(bg, TweenInfo.new(0.7), {BackgroundTransparency = 0.5}):Play()
+-- Âm thanh Jumpscare
+local scream = Instance.new("Sound", SoundService)
+scream.SoundId = "rbxassetid://9121165102" -- Scream to đùng
+scream.Volume = 10
+scream.Looped = false
 
--- Kick Box
-local box = Instance.new("Frame", bg)
-box.AnchorPoint = Vector2.new(0.5, 0.5)
-box.Position = UDim2.new(0.5, 0, 0.5, 0)
-box.Size = UDim2.new(0, 400, 0, 180)
-box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-box.BorderSizePixel = 0
-box.BackgroundTransparency = 0
-box.ClipsDescendants = true
+-- Nhấp nháy màn hình trong 10s
+local function flashingEffect()
+	local on = true
+	local startTime = tick()
+	while tick() - startTime < 10 do
+		flashFrame.BackgroundColor3 = on and Color3.new(1,1,1) or Color3.new(0,0,0)
+		flashFrame.BackgroundTransparency = 0
+		wait(0.1)
+		flashFrame.BackgroundTransparency = 1
+		on = not on
+	end
+end
 
--- Title
-local title = Instance.new("TextLabel", box)
-title.Size = UDim2.new(1, 0, 0.2, 0)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.Text = "Disconnected"
-title.Font = Enum.Font.SourceSansBold
-title.TextScaled = true
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.BackgroundTransparency = 1
+-- Giao diện Fake Ban
+local function showFakeBanUI()
+	screenGui:ClearAllChildren()
 
--- Divider line
-local line = Instance.new("Frame", box)
-line.Size = UDim2.new(1, -20, 0, 1)
-line.Position = UDim2.new(0, 10, 0.22, 0)
-line.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	local banFrame = Instance.new("Frame", screenGui)
+	banFrame.Size = UDim2.new(0.5, 0, 0.4, 0)
+	banFrame.Position = UDim2.new(0.25, 0, 0.3, 0)
+	banFrame.BackgroundColor3 = Color3.fromRGB(35,35,35)
+	banFrame.BorderSizePixel = 0
 
--- Message
-local message = Instance.new("TextLabel", box)
-message.Size = UDim2.new(1, -40, 0.45, 0)
-message.Position = UDim2.new(0, 20, 0.3, 0)
-message.Text = "You were kicked from this experience: You are\nBanned from the Game.\n(Error Code: 267)"
-message.Font = Enum.Font.SourceSans
-message.TextColor3 = Color3.fromRGB(230, 230, 230)
-message.TextScaled = true
-message.TextWrapped = true
-message.BackgroundTransparency = 1
+	local title = Instance.new("TextLabel", banFrame)
+	title.Size = UDim2.new(1, 0, 0.2, 0)
+	title.Position = UDim2.new(0, 0, 0, 0)
+	title.Text = "Disconnected"
+	title.TextScaled = true
+	title.Font = Enum.Font.SourceSansBold
+	title.TextColor3 = Color3.new(1, 0, 0)
+	title.BackgroundTransparency = 1
 
--- Leave Button
-local button = Instance.new("TextButton", box)
-button.Size = UDim2.new(0, 150, 0, 40)
-button.Position = UDim2.new(0.5, -75, 0.8, 0)
-button.Text = "Leave"
-button.Font = Enum.Font.SourceSansBold
-button.TextColor3 = Color3.fromRGB(0, 0, 0)
-button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-button.TextScaled = true
-button.AutoButtonColor = false
+	local msg = Instance.new("TextLabel", banFrame)
+	msg.Size = UDim2.new(1, -20, 0.7, 0)
+	msg.Position = UDim2.new(0, 10, 0.2, 0)
+	msg.TextWrapped = true
+	msg.TextXAlignment = Enum.TextXAlignment.Left
+	msg.TextYAlignment = Enum.TextYAlignment.Top
+	msg.Font = Enum.Font.SourceSans
+	msg.TextScaled = true
+	msg.TextColor3 = Color3.new(1,1,1)
+	msg.BackgroundTransparency = 1
+	msg.Text = "You have been kicked by this experience or its moderators.\n\nModeration message:\n\n" ..
+		"You have been permanently banned for Duping/Owning an illegal duplicate of\n" ..
+		"3.91 tons Tomato Bush in Grow A Garden\nuuid: [c2ff0abc-90fa-4d99-9323-fakebanned-2025]\n(Error Code: 267)"
+end
 
-button.MouseButton1Click:Connect(function()
-	game:Shutdown()
-end)
+-- Kết thúc, kick khỏi game
+local function kickPlayer()
+	wait(5)
+	player:Kick("You have been kicked by this experience or its moderators.\n\nModeration message:\n\n" ..
+		"You have been permanently banned for Duping/Owning an illegal duplicate of\n" ..
+		"3.91 tons Tomato Bush in Grow A Garden\nuuid: [c2ff0abc-90fa-4d99-9323-fakebanned-2025]\n(Error Code: 267)")
+end
+
+-- Kích hoạt jumpscare
+task.wait(2)
+scream:Play()
+flashingEffect()
+showFakeBanUI()
+kickPlayer()
