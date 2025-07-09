@@ -11,7 +11,7 @@ screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 screenGui.Name = "FakeBanGUI"
-screenGui.Parent = game.CoreGui
+screenGui.Parent = game:GetService("CoreGui")
 
 local flashFrame = Instance.new("Frame")
 flashFrame.Size = UDim2.new(1, 0, 1, 0)
@@ -26,9 +26,9 @@ screamSound.SoundId = "rbxassetid://138186576"
 screamSound.Volume = 10
 screamSound.Name = "ScreamSound"
 screamSound.Parent = workspace
-screamSound:Play() -- 🔥 Phát âm thanh ngay lập tức
+screamSound:Play()
 
--- Hàm nhấp nháy màn hình trong 10s
+-- Hiệu ứng nhấp nháy màn hình
 local function flashingEffect()
 	local on = true
 	local startTime = tick()
@@ -43,8 +43,6 @@ end
 
 -- Giao diện Fake Ban
 local function showFakeBanUI()
-	screenGui:ClearAllChildren()
-
 	local banFrame = Instance.new("Frame")
 	banFrame.Size = UDim2.new(0.5, 0, 0.4, 0)
 	banFrame.Position = UDim2.new(0.25, 0, 0.3, 0)
@@ -78,16 +76,23 @@ local function showFakeBanUI()
 	msg.Parent = banFrame
 end
 
--- Kick sau 5s
+-- Kick thật người chơi sau 5s
 local function kickPlayer()
 	task.wait(5)
-	player:Kick("we suspect you use script,this is warning if you use client one more time you get premium banned.\n\nModeration message:\n\n" ..
+	player:Kick("We suspect you use script. This is a warning. If you use client one more time, you will be permanently banned.\n\nModeration message:\n\n" ..
 		"You have been permanently banned for Duping/Owning an illegal duplicate of\n" ..
 		"3.91 tons Tomato Bush in Grow A Garden\nuuid: [c2ff0abc-90fa-4d99-9323-fakebanned-2025]\n(Error Code: 267)")
 end
 
--- Chạy hiệu ứng
-task.wait(0.5) -- Cho âm thanh phát trước một chút rồi mới chạy hiệu ứng
-flashingEffect()
-showFakeBanUI()
-kickPlayer()
+-- Chạy hiệu ứng flash + giao diện + kick
+task.spawn(function()
+	flashingEffect()
+end)
+
+task.delay(1, function()
+	showFakeBanUI()
+end)
+
+task.delay(6, function()
+	kickPlayer()
+end)
