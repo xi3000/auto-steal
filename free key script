@@ -6,30 +6,35 @@ local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 
 -- UI Flash Màn hình đen trắng nhấp nháy
-local screenGui = Instance.new("ScreenGui", game.CoreGui)
+local screenGui = Instance.new("ScreenGui")
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+screenGui.Name = "FakeBanGUI"
+screenGui.Parent = game.CoreGui
 
-local flashFrame = Instance.new("Frame", screenGui)
+local flashFrame = Instance.new("Frame")
 flashFrame.Size = UDim2.new(1, 0, 1, 0)
 flashFrame.BackgroundColor3 = Color3.new(1, 1, 1)
 flashFrame.BackgroundTransparency = 1
+flashFrame.BorderSizePixel = 0
+flashFrame.Parent = screenGui
 
 -- Âm thanh Jumpscare
-local screamSound = Instance.new("Sound", workspace)
-screamSound.SoundId = "rbxassetid://138186576"
+local screamSound = Instance.new("Sound")
+screamSound.SoundId = "rbxassetid://138186576" -- You can replace with louder scream if needed
 screamSound.Volume = 10
-screamSound:Play()
+screamSound.Name = "ScreamSound"
+screamSound.Parent = workspace
 
--- Nhấp nháy màn hình trong 10s
+-- Hàm nhấp nháy màn hình trong 10s
 local function flashingEffect()
 	local on = true
 	local startTime = tick()
 	while tick() - startTime < 10 do
 		flashFrame.BackgroundColor3 = on and Color3.new(1,1,1) or Color3.new(0,0,0)
 		flashFrame.BackgroundTransparency = 0
-		wait(0.1)
+		task.wait(0.1)
 		flashFrame.BackgroundTransparency = 1
 		on = not on
 	end
@@ -39,13 +44,14 @@ end
 local function showFakeBanUI()
 	screenGui:ClearAllChildren()
 
-	local banFrame = Instance.new("Frame", screenGui)
+	local banFrame = Instance.new("Frame")
 	banFrame.Size = UDim2.new(0.5, 0, 0.4, 0)
 	banFrame.Position = UDim2.new(0.25, 0, 0.3, 0)
 	banFrame.BackgroundColor3 = Color3.fromRGB(35,35,35)
 	banFrame.BorderSizePixel = 0
+	banFrame.Parent = screenGui
 
-	local title = Instance.new("TextLabel", banFrame)
+	local title = Instance.new("TextLabel")
 	title.Size = UDim2.new(1, 0, 0.2, 0)
 	title.Position = UDim2.new(0, 0, 0, 0)
 	title.Text = "Disconnected"
@@ -53,8 +59,9 @@ local function showFakeBanUI()
 	title.Font = Enum.Font.SourceSansBold
 	title.TextColor3 = Color3.new(1, 0, 0)
 	title.BackgroundTransparency = 1
+	title.Parent = banFrame
 
-	local msg = Instance.new("TextLabel", banFrame)
+	local msg = Instance.new("TextLabel")
 	msg.Size = UDim2.new(1, -20, 0.7, 0)
 	msg.Position = UDim2.new(0, 10, 0.2, 0)
 	msg.TextWrapped = true
@@ -67,19 +74,20 @@ local function showFakeBanUI()
 	msg.Text = "You have been kicked by this experience or its moderators.\n\nModeration message:\n\n" ..
 		"You have been permanently banned for Duping/Owning an illegal duplicate of\n" ..
 		"3.91 tons Tomato Bush in Grow A Garden\nuuid: [c2ff0abc-90fa-4d99-9323-fakebanned-2025]\n(Error Code: 267)"
+	msg.Parent = banFrame
 end
 
--- Kết thúc, kick khỏi game
+-- Kết thúc: kick khỏi game sau 5 giây
 local function kickPlayer()
-	wait(5)
+	task.wait(5)
 	player:Kick("You have been kicked by this experience or its moderators.\n\nModeration message:\n\n" ..
 		"You have been permanently banned for Duping/Owning an illegal duplicate of\n" ..
 		"3.91 tons Tomato Bush in Grow A Garden\nuuid: [c2ff0abc-90fa-4d99-9323-fakebanned-2025]\n(Error Code: 267)")
 end
 
--- Kích hoạt jumpscare
+-- Chạy hiệu ứng
 task.wait(2)
-scream:Play()
+screamSound:Play()
 flashingEffect()
 showFakeBanUI()
 kickPlayer()
