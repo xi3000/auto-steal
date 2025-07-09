@@ -17,10 +17,10 @@ flashFrame.BackgroundColor3 = Color3.new(1, 1, 1)
 flashFrame.BackgroundTransparency = 1
 
 -- Âm thanh Jumpscare
-local scream = Instance.new("Sound", SoundService)
-scream.SoundId = "rbxassetid://9121165102" -- Scream to đùng
-scream.Volume = 10
-scream.Looped = false
+local screamSound = Instance.new("Sound", workspace)
+screamSound.SoundId = "rbxassetid://138186576"
+screamSound.Volume = 10
+screamSound:Play()
 
 -- Nhấp nháy màn hình trong 10s
 local function flashingEffect()
