@@ -1,3 +1,41 @@
+-- Fake Ban + Jump Scare Script
+-- For trolling purposes only 😈
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+local StarterGui = game:GetService("StarterGui")
+local LocalPlayer = Players.LocalPlayer
+
+-- ⚠️ Add blur
+local blur = Instance.new("BlurEffect")
+blur.Size = 24
+blur.Parent = Lighting
+
+-- 👻 Jump Scare function
+local function jumpScare()
+	local screamSound = Instance.new("Sound", workspace)
+	screamSound.SoundId = "rbxassetid://138186576" -- Scream Sound (scary!)
+	screamSound.Volume = 10
+	screamSound:Play()
+
+	local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
+	gui.Name = "JumpScare"
+
+	local scaryImage = Instance.new("ImageLabel", gui)
+	scaryImage.Size = UDim2.new(1, 0, 1, 0)
+	scaryImage.Position = UDim2.new(0, 0, 0, 0)
+	scaryImage.BackgroundTransparency = 1
+	scaryImage.Image = "rbxassetid://11388974463" -- Scary face image
+	scaryImage.ImageTransparency = 1
+
+	TweenService:Create(scaryImage, TweenInfo.new(0.3), {ImageTransparency = 0}):Play()
+
+	task.delay(2, function()
+		game:Shutdown()
+	end)
+end
+
 -- Perfect Fake Kick Screen - LocalScript only
 
 local Players = game:GetService("Players")
